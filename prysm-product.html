@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prysm iO 產品篇 逐字稿</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Space+Grotesk:wght@400;600;700&display=swap');
+
+  :root {
+    --black: #0d0d0d;
+    --dark: #1a1a1a;
+    --card: #222222;
+    --border: #333333;
+    --accent: #00c9a7;
+    --accent2: #ff6b35;
+    --warn: #f5b700;
+    --text: #e8e8e8;
+    --muted: #888888;
+    --slide-bg: #111111;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background: var(--black);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    background: var(--dark);
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .topbar-title {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .topbar-sub {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .topbar-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .btn-sm {
+    font-size: 12px;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Noto Sans TC', sans-serif;
+    font-weight: 500;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    transition: all .2s;
+  }
+  .btn-sm:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-print {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .btn-print:hover { background: var(--accent); color: var(--black); }
+
+  /* ── PROGRESS ── */
+  .progress-wrap {
+    background: var(--dark);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: sticky;
+    top: 45px;
+    z-index: 99;
+  }
+  .progress-label {
+    font-size: 11px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .progress-bar-outer {
+    flex: 1;
+    height: 5px;
+    background: var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .progress-bar-inner {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), #00e5c0);
+    border-radius: 10px;
+    transition: width .4s ease;
+  }
+  .progress-count {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  /* ── LAYOUT ── */
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 24px 20px 60px;
+  }
+
+  /* ── SLIDE CARD ── */
+  .slide-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    transition: border-color .2s;
+  }
+  .slide-card.practiced {
+    border-color: var(--accent);
+  }
+  .slide-card.practiced .slide-header {
+    border-bottom-color: rgba(0,201,167,.2);
+  }
+
+  .slide-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 18px 20px 14px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+  }
+  .slide-num {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    background: rgba(0,201,167,.12);
+    border-radius: 6px;
+    padding: 3px 8px;
+    white-space: nowrap;
+    margin-top: 2px;
+  }
+  .slide-card.practiced .slide-num {
+    background: rgba(0,201,167,.25);
+  }
+  .slide-meta { flex: 1; }
+  .slide-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.4;
+  }
+  .slide-subtitle {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 3px;
+  }
+  .slide-toggle {
+    font-size: 18px;
+    color: var(--muted);
+    line-height: 1;
+    padding-top: 2px;
+    transition: transform .25s;
+  }
+  .slide-card.open .slide-toggle {
+    transform: rotate(180deg);
+  }
+
+  /* ── SLIDE BODY ── */
+  .slide-body {
+    display: none;
+    padding: 20px;
+    border-top: 1px solid var(--border);
+  }
+  .slide-card.open .slide-body {
+    display: block;
+  }
+
+  /* KEY POINT BOX */
+  .keypoint {
+    background: rgba(0,201,167,.07);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 10px 10px 0;
+    padding: 12px 16px;
+    margin-bottom: 18px;
+  }
+  .keypoint-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .keypoint p {
+    font-size: 13px;
+    color: #ccc;
+    line-height: 1.7;
+  }
+
+  /* SCRIPT SECTION */
+  .section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 16px 0 8px;
+  }
+  .script-block {
+    background: var(--slide-bg);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .script-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    letter-spacing: .05em;
+  }
+  .tag-open   { background: rgba(245,183,0,.15); color: var(--warn); }
+  .tag-core   { background: rgba(0,201,167,.15); color: var(--accent); }
+  .tag-story  { background: rgba(255,107,53,.15); color: var(--accent2); }
+  .tag-bridge { background: rgba(150,150,255,.15); color: #9999ff; }
+  .tag-close  { background: rgba(255,255,255,.08); color: #aaa; }
+
+  .script-block p {
+    font-size: 14px;
+    line-height: 1.85;
+    color: #ddd;
+  }
+  .script-block .highlight {
+    color: #fff;
+    font-weight: 500;
+  }
+  .script-block .accent-word {
+    color: var(--accent);
+    font-weight: 600;
+  }
+  .script-block .warn-word {
+    color: var(--warn);
+    font-weight: 500;
+  }
+
+  /* TIPS */
+  .tips-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .tip-item {
+    background: var(--slide-bg);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 12px;
+    color: #bbb;
+    line-height: 1.6;
+  }
+  .tip-item strong {
+    display: block;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 3px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+
+  /* PRACTICE */
+  .practice-row {
+    margin-top: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .practice-note {
+    font-size: 11px;
+    color: var(--muted);
+    flex: 1;
+  }
+  .btn-practice {
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 9px 22px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all .2s;
+    background: rgba(0,201,167,.15);
+    color: var(--accent);
+    border: 1px solid rgba(0,201,167,.3);
+  }
+  .btn-practice:hover {
+    background: var(--accent);
+    color: var(--black);
+  }
+  .slide-card.practiced .btn-practice {
+    background: var(--accent);
+    color: var(--black);
+    border-color: var(--accent);
+  }
+
+  /* ── DIVIDER ── */
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 28px 0 16px;
+  }
+  .section-divider-line { flex: 1; height: 1px; background: var(--border); }
+  .section-divider-text {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  /* ── QUICK NAV ── */
+  .quicknav {
+    background: var(--dark);
+    border-bottom: 1px solid var(--border);
+    padding: 8px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: sticky;
+    top: 57px;
+    z-index: 99;
+  }
+  .quicknav-label {
+    font-size: 11px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .quicknav-buttons {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .qbtn {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .qbtn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(0,201,167,.1);
+  }
+  .qbtn.done {
+    border-color: var(--accent);
+    background: rgba(0,201,167,.2);
+    color: var(--accent);
+  }
+
+  /* ── PRINT ── */
+  @media print {
+    body { background: #fff; color: #000; }
+    .topbar, .progress-wrap, .btn-practice, .slide-toggle, .practice-row { display: none !important; }
+    .slide-card { border: 1px solid #ccc; break-inside: avoid; page-break-inside: avoid; }
+    .slide-body { display: block !important; }
+    .slide-header { cursor: default; }
+    .script-block { background: #f8f8f8; }
+    .keypoint { background: #f0faf8; }
+    .tag-open, .tag-core, .tag-story, .tag-bridge, .tag-close { -webkit-print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div>
+    <div class="topbar-title">Prysm iO 產品篇 逐字稿</div>
+  </div>
+  <div class="topbar-actions">
+    <button class="btn-sm" onclick="toggleAll(true)">全部展開</button>
+    <button class="btn-sm" onclick="toggleAll(false)">全部收合</button>
+    <button class="btn-sm btn-print" onclick="window.print()">🖨 列印</button>
+  </div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-wrap">
+  <span class="progress-label">練習進度</span>
+  <div class="progress-bar-outer">
+    <div class="progress-bar-inner" id="progressBar" style="width:0%"></div>
+  </div>
+  <span class="progress-count" id="progressCount">0 / 12</span>
+</div>
+
+<!-- QUICK NAV -->
+<div class="quicknav">
+  <span class="quicknav-label">跳至</span>
+  <div class="quicknav-buttons">
+    <button class="qbtn" onclick="jumpTo(1)">1</button>
+    <button class="qbtn" onclick="jumpTo(2)">2</button>
+    <button class="qbtn" onclick="jumpTo(3)">3</button>
+    <button class="qbtn" onclick="jumpTo(4)">4</button>
+    <button class="qbtn" onclick="jumpTo(5)">5</button>
+    <button class="qbtn" onclick="jumpTo(6)">6</button>
+    <button class="qbtn" onclick="jumpTo(7)">7</button>
+    <button class="qbtn" onclick="jumpTo(8)">8</button>
+    <button class="qbtn" onclick="jumpTo(9)">9</button>
+    <button class="qbtn" onclick="jumpTo(10)">10</button>
+    <button class="qbtn" onclick="jumpTo(11)">11</button>
+    <button class="qbtn" onclick="jumpTo(12)">12</button>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ══ PART 1 ══ -->
+<div class="section-divider">
+  <div class="section-divider-line"></div>
+  <div class="section-divider-text">第一部分｜引發共鳴</div>
+  <div class="section-divider-line"></div>
+</div>
+
+<!-- SLIDE 1 -->
+<div class="slide-card" id="card-1">
+  <div class="slide-header" onclick="toggleCard(1)">
+    <div class="slide-num">SLIDE 01</div>
+    <div class="slide-meta">
+      <div class="slide-title">別讓 1 倒下，不然剩下的全是 0</div>
+      <div class="slide-subtitle">開場破冰｜健康是人生的底層邏輯</div>
+    </div>
+    <div class="slide-toggle">▾</div>
+  </div>
+  <div class="slide-body">
+    <div class="keypoint">
+      <div class="keypoint-label">核心訊息</div>
+      <p>用「1 跟 0」的比喻讓對方瞬間理解：健康不是人生的全部，但健康出問題，它會變成人生的全部。</p>
+    </div>
+
+    <div class="section-label">開場說法</div>
+    <div class="script-block">
+      <span class="script-tag tag-open">開場提問</span>
+      <p>你有沒有注意到，我們身邊很多很拼的人——<span class="highlight">拼事業、拼賺錢、拼家庭</span>——可是到某一個時間點，突然身體出了狀況，才發現什麼都暫停了？</p>
+    </div>
+    <div class="script-block">
+      <span class="script-tag tag-core">核心比喻</span>
+      <p>我喜歡用這個比喻：你的人生就像一串數字。<span class="accent-word">健康是最前面的「1」</span>，後面是金錢、房子、事業、家庭……<br><br>後面加幾個零都好，越多越富有。可是——<span class="highlight">如果那個「1」倒下了，後面再多的零，都只剩零。</span></p>
+    </div>
+    <div class="script-block">
+      <span class="script-tag tag-bridge">銜接</span>
+      <p>所以健康不是人生的全部，但當它出問題，它會<span class="warn-word">變成人生的全部</span>。今天我想跟你聊的，就是怎麼讓那個「1」一直站著。</p>
+    </div>
+
+    <div class="section-label">講師提示</div>
+    <div class="tips-grid">
+      <div class="tip-item"><strong>語速</strong>比喻說完後，停頓 1-2 秒，讓對方消化。</div>
+      <div class="tip-item"><strong>眼神</strong>說「1 倒下」時直視對方，製造共鳴感。</div>
+    </div>
+    <div class="practice-row">
+      <span class="practice-note">口頭練習這段說法，確認比喻說得自然流暢後打勾 ✓</span>
+      <button class="btn-practice" onclick="markPracticed(1)">✓ 練習完成</button>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 2 -->
+<div class="slide-card" id="card-2">
+  <div class="slide-header" onclick="toggleCard(2)">
+    <div class="slide-num">SLIDE 02</div>
+    <div class="slide-meta">
+      <div class="slide-title">是否有困擾你的小小毛病？</div>
+      <div class="slide-subtitle">共鳴確認｜代謝失衡的三大因素</div>
+    </div>
+    <div class="slide-toggle">▾</div>
+  </div>
+  <div class="slide-body">
+    <div class="keypoint">
+      <div class="keypoint-label">核心訊息</div>
+      <p>這些「不算生病」的小毛病不是你老了，是代謝失衡的訊號。背後三大因素：慢性發炎 × 氧化壓力 × 粒線體功能障礙。</p>
+    </div>
+
+    <div class="section-label">互動說法</div>
+    <div class="script-block">
+      <span class="script-tag tag-open">引發共鳴</span>
+      <p>我想請你誠實回答一個問題：以下這些，你有沒有？<span class="highlight">睡不好、容易累、恢復變慢、常痠痛、情緒煩躁……</span><br><br>你只要有一到兩個，其實就是現代人最常見的狀態了。</p>
+    </div>
+    <div class="script-block">
+      <span class="script-tag tag-story">個人故事</span>
+      <p>我自己也有，比如常常想到一件事，轉頭就忘了——我現在講課都要靠投影片提醒自己。還有睡起來肩頸超不舒服，就算睡很久，起床還是身體沉沉的。</p>
+    </div>
+    <div class="script-block">
+      <span class="script-tag tag-core">核心知識</span>
+      <p>這些不是「老了」，是<span class="accent-word">代謝失衡</span>的訊號。代謝失衡有三個底層原因——<span class="highlight">慢性發炎、氧化壓力、粒線體功能障礙</span>——三個互相影響，形成一個「壞能量三角」。<br><br>我們今天談的，就是從這個三角去解決。</p>
+    </div>
+
+    <div class="section-label">講師提示</div>
+    <div class="tips-grid">
+      <div class="tip-item"><strong>互動技巧</strong>唸症狀時邊唸邊問「你有嗎？」，不要連珠炮一次全唸完。</div>
+      <div class="tip-item"><strong>個人化</strong>插入自己真實的1-2個症狀，親切感立刻提升。</div>
+    </div>
+    <div class="practice-row">
+      <span class="practice-note">練習加入自己的症狀故事版本</span>
+      <button class="btn-practice" onclick="markPracticed(2)">✓ 練習完成</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PART 2 ══ -->
+<div class="section-divider">
+  <div class="section-divider-line"></div>
+  <div class="section-divider-text">第二部分｜介紹 Prysm iO</div>
+  <div class="section-divider-line"></div>
+</div>
+
+<!-- SLIDE 3 -->
+<div class="slide-card" id="card-3">
+  <div class="slide-header" onclick="toggleCard(3)">
+    <div class="slide-num">SLIDE 03</div>
+    <div class="slide-meta">
+      <div class="slide-title">Prysm iO｜健康數據學</div>
+      <div class="slide-subtitle">核心價值｜從感覺到數據的轉變</div>
+    </div>
+    <div class="slide-toggle">▾</div>
+  </div>
+  <div class="slide-body">
+    <div class="keypoint">
+      <div class="keypoint-label">核心訊息</div>
+      <p>健康不再靠感覺。Prysm iO 讓你 15 秒、一指，把抗氧化防禦力變成看得見的數字。</p>
+    </div>
+
+    <div class="section-label">說明重點</div>
+    <div class="script-block">
+      <span class="script-tag tag-open">問題設定</span>
+      <p>你有沒有遇過這種情況：身體怪怪的，去醫院檢查，醫生說你沒事——可是你就是覺得哪裡不對？<br><br>或者，你吃保健品，但吃了兩個月完全沒感覺，最後放棄了？</p>
+    </div>
+    <div class="script-block">
+      <span class="script-tag tag-story">個人故事</span>
+      <p>我自己是感受力超麻瓜的人。我吃任何東西都說沒感覺，通常要半年到一年才會有感覺——但以前的我等不到那時候就放棄了。</p>
+    </div>
+    <div class="script-block">
+      <span class="script-tag tag-core">解決方案</span>
+      <p>然後我遇到了這臺儀器。它叫 <span class="accent-word">Prysm iO</span>——就是手指放上去 15 秒，<span class="highlight">不痛、不抽血、不侵入</span>，就可以告訴你現在身體的抗氧化狀態。<br><br>它的原理是透過皮膚的光學訊號分析類胡蘿蔔素，這是你身體<span class="accent-word">滅火系統是否足夠</span>的最直接指標。</p>
+    </div>
+    <div class="script-block">
+      <span class="script-tag tag-bridge">銜接</span>
+      <p>它就像你家的體脂機、血壓計——只是它量的不是體重，而是<span class="highlight">你的身體有多少防禦力</span>。</p>
+    </div>
+
+    <div class="practice-row">
+      <span class="practice-note">用自己的語言說出「感覺到數據」的核心轉變</span>
+      <button class="btn-practice" onclick="markPracticed(3)">✓ 練習完成</button>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 4 -->
+<div class="slide-card" id="card-4">
+  <div class="slide-header" onclick="toggleCard(4)">
+    <div class="slide-num">SLIDE 04</div>
+    <div class="slide-meta">
+      <div class="slide-title">Prysm iO 不是玩具</div>
+      <div class="slide-subtitle">科學背書｜超過 20 年的研究積累</div>
+    </div>
+    <div class="slide-toggle">▾</div>
+  </div>
+  <div class="slide-body">
+    <div class="keypoint">
+      <div class="keypoint-label">核心訊息</div>
+      <p>背後是 20 年科學積累：2,100 萬筆掃描數據、80+ 篇學術研究、900+ 篇第三方論文。不是玩具，是值得信賴的健康工具。</p>
+    </div>
+
+    <div class="section-label">說明重點</div>
+    <div class="script-block">
+      <span class="script-tag tag-open">預防疑慮</span>
+      <p>我第一次看到這個，也覺得它很像玩具——就一個小圓形，感覺很輕。但我後來了解它的背景，完全改觀了。</p>
+    </div>
+    <div class="script-block">
+      <span class="script-tag tag-core">數據佐證</span>
+      <p>這個技術從 <span class="accent-word">2000 年</span>就開始在猶他大學的實驗室裡研究，那時候要一臺 10 英尺 × 10 英尺、還需要液態氮冷卻的大機器。<br><br>二十幾年後，現在縮小成你手掌心的大小，但背後累積了<span class="accent-word"> 2,100 萬筆</span>掃描資料庫、<span class="accent-word">80+ 篇</span>學術研究，以及每年超過<span class="accent-word"> 900 篇</span>第三方論文在支撐。</p>
+    </div>
+    <div class="script-block">
+      <span class="script-tag tag-bridge">信任轉移</span>
+      <p>而且它不是說我量出來的結果只是猜的——它的光學數據和抽血檢測的類胡蘿蔔素數值，研究顯示<span class="highlight">高度正相關</span>。只是我們不用去醫院、不用花好幾千塊。</p>
+    </div>
+
+    <div class="tips-grid">
+      <div class="tip-item"><strong>數字記法</strong>記三個關鍵數字：20年、2100萬筆、80篇。</div>
+      <div class="tip-item"><strong>語氣</strong>說「我也覺得像玩具」比直接說「它不是玩具」更有說服力。</div>
+    </div>
+    <div class="practice-row">
+      <span class="practice-note">練習用三個數字講完這張，不看投影片</span>
+      <button class="btn-practice" onclick="markPracticed(4)">✓ 練習完成</button>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 5 -->
+<div class="slide-card" id="card-5">
+  <div class="slide-header" onclick="toggleCard(5)">
+    <div class="slide-num">SLIDE 05</div>
+    <div class="slide-meta">
+      <div class="slide-title">專家及專業認證｜金色榮耀</div>
+      <div class="slide-subtitle">外部背書｜媒體、獎項、專家認可</div>
+    </div>
+    <div class="slide-toggle">▾</div>
+  </div>
+  <div class="slide-body">
+    <div class="keypoint">
+      <div class="keypoint-label">核心訊息</div>
+      <p>不只我們說好：2026 Globee Awards 最佳創新數據應用產品獎、謝明哲教授親自實測推薦、遠見雜誌 2026 年 6 月號封面報導。</p>
+    </div>
+
+    <div class="section-label">說明重點</div>
+    <div class="script-block">
+      <span class="script-tag tag-core">外部認證</span>
+      <p>如果你覺得這些都是「我們自己說的」，那來看看外面的人怎麼說。<br><br><span class="highlight">謝明哲教授</span>——台灣的營養學泰斗——他自己做了量測對比，從 400 分改善到 570 分，然後在臉書上說：「<span class="accent-word">健康生活，真的可以一指掌握</span>。」</p>
+    </div>
+    <div class="script-block">
+      <span class="script-tag tag-core">媒體報導</span>
+      <p>遠見雜誌這個月（2026 年 6 月）的 480 期，主題是「不老台灣」，裡面就提到<span class="highlight">健康老化的關鍵就在每日量測</span>。</p>
+    </div>
+    <div class="script-block">
+      <span class="script-tag tag-core">獎項</span>
+      <p>今年也拿到了 <span class="accent-word">Globee Awards</span> 的最佳創新數據應用產品獎——這是國際性的認證，不是台灣自己評的。</p>
+    </div>
+
+    <div class="practice-row">
+      <span class="practice-note">用「不只我們說」作為起點，練習這三個外部背書</span>
+      <button class="btn-practice" onclick="markPracticed(5)">✓ 練習完成</button>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 6 -->
+<div class="slide-card" id="card-6">
+  <div class="slide-header" onclick="toggleCard(6)">
+    <div class="slide-num">SLIDE 06</div>
+    <div class="slide-meta">
+      <div class="slide-title">為什麼大家願意量？</div>
+      <div class="slide-subtitle">社群力量｜第一次讓健康變得看得見</div>
+    </div>
+    <div class="slide-toggle">▾</div>
+  </div>
+  <div class="slide-body">
+    <div class="keypoint">
+      <div class="keypoint-label">核心訊息</div>
+      <p>臺灣已有超過 20 萬筆量測紀錄。大家願意量，不是因為懂科學——是因為「第一次有人讓健康變得看得見」。</p>
+    </div>
+
+    <div class="section-label">說明重點</div>
+    <div class="script-block">
+      <span class="script-tag tag-open">提問引導</span>
+      <p>你知道台灣現在已經有超過<span class="accent-word"> 20 萬人</span>量過這個嗎？那你覺得——他們為什麼願意量？</p>
+    </div>
+    <div class="script-block">
+      <span class="script-tag tag-core">核心洞察</span>
+      <p>不是因為他們都很懂科學，也不是因為有人解釋了 80 篇論文給他們聽。<br><br>是因為——<span class="highlight">第一次有人讓健康變得看得見</span>。<br><br>以前我們的健康是感覺。有感覺才覺得有問題，沒感覺就覺得沒事。現在第一次，你可以用一個<span class="accent-word">數字</span>告訴自己：我現在的狀態在哪裡。</p>
+    </div>
+
+    <div class="tips-grid">
+      <div class="tip-item"><strong>停頓技巧</strong>說完「看得見」後停一秒，讓這句話沉下去。</div>
+      <div class="tip-item"><strong>邀請量測</strong>說完這段，自然邀請：「要不要現在試試看？」</div>
+    </div>
+    <div class="practice-row">
+      <span class="practice-note">這張練習「問句切入 → 核心答案」的說話結構</span>
+      <button class="btn-practice" onclick="markPracticed(6)">✓ 練習完成</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PART 3 ══ -->
+<div class="section-divider">
+  <div class="section-divider-line"></div>
+  <div class="section-divider-text">第三部分｜深化健康知識</div>
+  <div class="section-divider-line"></div>
+</div>
+
+<!-- SLIDE 7 -->
+<div class="slide-card" id="card-7">
+  <div class="slide-header" onclick="toggleCard(7)">
+    <div class="slide-num">SLIDE 07</div>
+    <div class="slide-meta">
+      <div class="slide-title">慢性發炎，才是現代人的底層問題</div>
+      <div class="slide-subtitle">知識深化｜氧化壓力的蔓延路徑</div>
+    </div>
+    <div class="slide-toggle">▾</div>
+  </div>
+  <div class="slide-body">
+    <div class="keypoint">
+      <div class="keypoint-label">核心訊息</div>
+      <p>慢性發炎不像急性發炎那麼明顯，它是「持續不熄的悶燒」——若不滅火，會蔓延到血管、器官，引發各種慢性病。</p>
+    </div>
+
+    <div class="section-label">說明重點</div>
+    <div class="script-block">
+      <span class="script-tag tag-open">區分概念</span>
+      <p>很多人聽到「發炎」，想到的是腸胃炎、扭傷——紅腫熱痛那種。那是<span class="highlight">急性發炎</span>，感覺很強烈，去醫院馬上處理。<br><br>但我們今天說的<span class="accent-word">慢性發炎</span>不一樣——它的火苗不大，但<span class="warn-word">持續不熄</span>。你去醫院，醫生說你沒事；但你就是覺得好像哪裡不對勁。</p>
+    </div>
+    <div class="script-block">
+      <span class="script-tag tag-story">比喻</span>
+      <p>我喜歡用這個比喻：你去過推拿師傅那裡嗎？有沒有遇過師傅說——「我不幫你壓脖子，我幫你壓腳底板，你脖子就會鬆了」？<br><br>一開始覺得很玄，但後來就懂了——<span class="highlight">一個地方的發炎，會蔓延到全身</span>。所以不只是你知道的那個「痛點」在發炎，而是整個城市都在悶燒。</p>
+    </div>
+    <div class="script-block">
+      <span class="script-tag tag-core">知識延伸</span>
+      <p>長期慢性發炎如果不處理，會延伸到：<span class="highlight">心血管、代謝系統、神經退化、消化、皮膚、情緒……</span><br><br>所以表面上看起來是不同的問題，底層其實是同一個火。</p>
+    </div>
+
+    <div class="practice-row">
+      <span class="practice-note">練習「急性 vs 慢性」的區分說法，加入推拿比喻</span>
+      <button class="btn-practice" onclick="markPracticed(7)">✓ 練習完成</button>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 8 -->
+<div class="slide-card" id="card-8">
+  <div class="slide-header" onclick="toggleCard(8)">
+    <div class="slide-num">SLIDE 08</div>
+    <div class="slide-meta">
+      <div class="slide-title">15 秒，足以改變你的人生</div>
+      <div class="slide-subtitle">行動框架｜滅火系統四個層次</div>
+    </div>
+    <div class="slide-toggle">▾</div>
+  </div>
+  <div class="slide-body">
+    <div class="keypoint">
+      <div class="keypoint-label">核心訊息</div>
+      <p>Prysm 是第一步：了解滅火系統夠不夠。不夠就補，已延燒就處理症狀，最終目標是不讓城市燒起來。</p>
+    </div>
+
+    <div class="section-label">說明重點</div>
+    <div class="script-block">
+      <span class="script-tag tag-core">框架說明</span>
+      <p>這張我最喜歡，因為它把邏輯說得非常清楚。我來帶你看四個層次：<br><br>
+      <span class="accent-word">第一步：了解滅火系統夠不夠</span>——這就是 Prysm 在做的事。15 秒，非侵入，判斷你的防禦力在哪裡。<br><br>
+      <span class="accent-word">第二步：補足不夠的滅火器</span>——類胡蘿蔔素、維生素 C/E、多酚類……這些是基礎補充。<br><br>
+      <span class="accent-word">第三步：已經有發炎症狀</span>——如果已經在延燒，加入魚油、Omega3、維生素 D 等針對性補充。<br><br>
+      <span class="accent-word">第四步：避免城市被波及</span>——淋巴疏通、推拿、症狀解決的產品類。</p>
+    </div>
+    <div class="script-block">
+      <span class="script-tag tag-bridge">關鍵提醒</span>
+      <p>但這一切的前提是——<span class="highlight">你先要知道自己在哪個位置</span>。所以 Prysm 不是終點，是你開始認識自己身體的<span class="accent-word">第一步</span>。</p>
+    </div>
+
+    <div class="practice-row">
+      <span class="practice-note">練習用「四個層次」框架，不看投影片說出來</span>
+      <button class="btn-practice" onclick="markPracticed(8)">✓ 練習完成</button>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 9 -->
+<div class="slide-card" id="card-9">
+  <div class="slide-header" onclick="toggleCard(9)">
+    <div class="slide-num">SLIDE 09</div>
+    <div class="slide-meta">
+      <div class="slide-title">自由基、滅火系統與慢性發炎的關係</div>
+      <div class="slide-subtitle">機制說明｜火花太多滅火器不夠</div>
+    </div>
+    <div class="slide-toggle">▾</div>
+  </div>
+  <div class="slide-body">
+    <div class="keypoint">
+      <div class="keypoint-label">核心訊息</div>
+      <p>自由基（火花）每天都在產生。身體有滅火系統，但火花太多、滅火器不夠，就會大火燃燒——出現失眠、疲勞、情緒煩躁等慢性發炎症狀。</p>
+    </div>
+
+    <div class="section-label">說明重點</div>
+    <div class="script-block">
+      <span class="script-tag tag-core">機制說明</span>
+      <p>我們的身體每天都在產生<span class="accent-word">自由基</span>——就是「火花」。壓力、熬夜、高油高糖飲食、空污、過度運動……這些都是火花的來源。<br><br>好消息是，我們天生有<span class="accent-word">滅火系統</span>——就是身體的抗氧化防禦系統。</p>
+    </div>
+    <div class="script-block">
+      <span class="script-tag tag-story">生活比喻</span>
+      <p>就像消防系統一樣——你家的滅火器是有時效的，到期了要換。我們出生就有這套系統，但<span class="highlight">隨著年紀增長、營養不夠，它會越來越跟不上</span>。<br><br>少量火花沒問題，滅火器可以應付。但現代人的火花太多了——滅火器根本不夠用，火就燒起來了。</p>
+    </div>
+    <div class="script-block">
+      <span class="script-tag tag-core">症狀連結</span>
+      <p>這時候就出現：<span class="highlight">自律神經失衡、常痠痛、睡不好、情緒煩躁、腦袋霧霧、過敏反應</span>——這些都是大火在燒的訊號。</p>
+    </div>
+
+    <div class="practice-row">
+      <span class="practice-note">練習「火花→滅火器→大火」三段式比喻，順暢說出來</span>
+      <button class="btn-practice" onclick="markPracticed(9)">✓ 練習完成</button>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 10 -->
+<div class="slide-card" id="card-10">
+  <div class="slide-header" onclick="toggleCard(10)">
+    <div class="slide-num">SLIDE 10</div>
+    <div class="slide-meta">
+      <div class="slide-title">Prysm iO 在確保滅火系統足夠</div>
+      <div class="slide-subtitle">數據解讀｜紅燈、黃燈、綠燈三區間</div>
+    </div>
+    <div class="slide-toggle">▾</div>
+  </div>
+  <div class="slide-body">
+    <div class="keypoint">
+      <div class="keypoint-label">核心訊息</div>
+      <p>Prysm 量的不是「你有沒有火」，而是「你還剩多少滅火器」。紅燈 0-300、黃燈 300-500、綠燈 500 以上。目標是穩定在綠燈區。</p>
+    </div>
+
+    <div class="section-label">說明重點</div>
+    <div class="script-block">
+      <span class="script-tag tag-core">數據解讀</span>
+      <p>很多人量完問我：「這個數字代表什麼？」<br><br>我喜歡這樣說：Prysm 量的<span class="highlight">不是你有沒有火</span>，而是<span class="accent-word">你還剩多少滅火器</span>。<br><br>數字越高，代表你的抗氧化防禦力越充足，可以應付生活中各種壓力。</p>
+    </div>
+    <div class="script-block">
+      <span class="script-tag tag-core">三個區間</span>
+      <p><span class="warn-word">紅燈區（0-300）</span>：火花沒被控制住，要積極補充。<br><br><span class="accent-word" style="color:var(--warn)">黃燈區（300-500）</span>：目前平衡，但一旦遇到大壓力或高污染，馬上可能失衡。<br><br><span class="accent-word">綠燈區（500 以上）</span>：滅火系統充足，經得起日常生活的火花考驗。</p>
+    </div>
+    <div class="script-block">
+      <span class="script-tag tag-bridge">個人目標設定</span>
+      <p>我自己的目標是<span class="accent-word">維持在 500 以上</span>——不是說就萬無一失，而是這個數值代表我的身體有足夠的緩衝，可以面對現代生活的各種挑戰。</p>
+    </div>
+
+    <div class="practice-row">
+      <span class="practice-note">練習解讀三個燈號，加入你自己的量測數值故事</span>
+      <button class="btn-practice" onclick="markPracticed(10)">✓ 練習完成</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PART 4 ══ -->
+<div class="section-divider">
+  <div class="section-divider-line"></div>
+  <div class="section-divider-text">第四部分｜解決方案</div>
+  <div class="section-divider-line"></div>
+</div>
+
+<!-- SLIDE 11 -->
+<div class="slide-card" id="card-11">
+  <div class="slide-header" onclick="toggleCard(11)">
+    <div class="slide-num">SLIDE 11</div>
+    <div class="slide-meta">
+      <div class="slide-title">牽一髮動全身的代謝漣漪</div>
+      <div class="slide-subtitle">需求延伸｜雙重營養危機與全方位補充</div>
+    </div>
+    <div class="slide-toggle">▾</div>
+  </div>
+  <div class="slide-body">
+    <div class="keypoint">
+      <div class="keypoint-label">核心訊息</div>
+      <p>抗氧化力不足影響全身：細胞保護 → 身體運作 → 生活表現。現代人面對「蔬果攝取不足 + 食物營養密度崩跌」的雙重危機，單靠飲食已不夠。</p>
+    </div>
+
+    <div class="section-label">說明重點</div>
+    <div class="script-block">
+      <span class="script-tag tag-core">知識框架</span>
+      <p>抗氧化力其實等於<span class="accent-word">修復力</span>。當這個底層的防禦力不足，影響會一層一層往上：<br><br>最底層是<span class="highlight">細胞保護</span>——細胞受損、慢性發炎、老化加速；中層是<span class="highlight">身體運作</span>——能量產生、脂肪代謝、血糖、荷爾蒙全都跑偏；最上層才是你感受到的<span class="highlight">生活表現</span>——睡不好、容易累、皮膚變差、免疫下降。</p>
+    </div>
+    <div class="script-block">
+      <span class="script-tag tag-core">雙重危機</span>
+      <p>但問題是，現代人有兩個營養危機同時在發生：<br><br>第一，<span class="warn-word">82% 的台灣人蔬果攝取量不足</span>。<br>第二，就算你有在吃蔬果，現在的食物<span class="warn-word">營養密度已經大幅崩跌</span>。以菠菜為例，1950 年每 100 克含 150 毫克維生素 C，到 1994 年已經只剩 13 毫克了。<br><br>這不是你的問題，是土地污染和環境問題造成的。所以<span class="highlight">光靠飲食，已經不夠了</span>。</p>
+    </div>
+
+    <div class="practice-row">
+      <span class="practice-note">練習「三層金字塔」+「兩個數據」說法</span>
+      <button class="btn-practice" onclick="markPracticed(11)">✓ 練習完成</button>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 12 -->
+<div class="slide-card" id="card-12">
+  <div class="slide-header" onclick="toggleCard(12)">
+    <div class="slide-num">SLIDE 12</div>
+    <div class="slide-meta">
+      <div class="slide-title">健康解碼 + 數據，讓你更了解自己</div>
+      <div class="slide-subtitle">結案收尾｜症狀 → 根因 → 解決方向</div>
+    </div>
+    <div class="slide-toggle">▾</div>
+  </div>
+  <div class="slide-body">
+    <div class="keypoint">
+      <div class="keypoint-label">核心訊息</div>
+      <p>兩件事做完就夠了：量測 Prysm 數據 + 完成健康解碼問卷，從症狀找到根因、找到解決方向。如新全線產品都可以滿足。</p>
+    </div>
+
+    <div class="section-label">收尾說法</div>
+    <div class="script-block">
+      <span class="script-tag tag-close">行動引導</span>
+      <p>講了這麼多，我只想讓你記住<span class="accent-word">兩件事</span>：<br><br>第一，<span class="highlight">不要再靠感覺過日子了</span>。Prysm 15 秒，讓你有了數字基準。<br><br>第二，數字只是開始。我會幫你做一個<span class="highlight">健康解碼</span>——從你的症狀出發，找到根因，告訴你優先補充哪個方向。</p>
+    </div>
+    <div class="script-block">
+      <span class="script-tag tag-core">方向說明</span>
+      <p>我們的方向很清楚：先<span class="accent-word">降低氧化壓力</span>，再<span class="accent-word">提升代謝機能</span>，再<span class="accent-word">緩解慢性發炎</span>，最後<span class="accent-word">保護粒線體</span>。<br><br>不管你現在最在意的是免疫腸道、心血管、體態、還是皮膚——如新都有對應的方向，而且每個方向都有數據可以追蹤改善。</p>
+    </div>
+    <div class="script-block">
+      <span class="script-tag tag-bridge">最後一句話</span>
+      <p>我今天陪你做的，不只是兩個數據而已——而是<span class="highlight">幫你開始認識自己的身體，然後一起改善</span>。</p>
+    </div>
+
+    <div class="tips-grid">
+      <div class="tip-item"><strong>語氣</strong>最後說「一起改善」時，語速放慢，表達真誠陪伴。</div>
+      <div class="tip-item"><strong>後續動作</strong>說完邀請對方做健康解碼問卷，不要讓分享停在這裡。</div>
+    </div>
+
+    <div class="section-label" style="margin-top:24px;">Q &amp; A｜對方已經在用其他品牌的產品怎麼辦？</div>
+    <div class="keypoint" style="margin-bottom:14px;">
+      <div class="keypoint-label">應對思路</div>
+      <p>不否定對方現有的選擇。我們已經把抗氧化→代謝→症狀→粒線體全盤溝通過，所以只需要問一句話，從對方「還沒有的產品線」切入，最終走向全產品整合。</p>
+    </div>
+    <div class="script-block">
+      <span class="script-tag tag-open">尊重現有選擇</span>
+      <p>你現在有在用的東西很好，代表你已經有在關注自己的健康了。<br><br>我不是要你換掉它，我想問你的是——<span class="highlight">你有想要全盤的去做調整嗎？讓所有的問題都可以被照顧到，然後數值可以有效率地提升？</span></p>
+    </div>
+    <div class="script-block">
+      <span class="script-tag tag-core">切入策略</span>
+      <p>我們今天聊了從<span class="accent-word">抗氧化→代謝機能→症狀緩解→粒線體保護</span>這一整條路。<br><br>你現在用的可能是其中一個環節，但其他環節呢？<span class="highlight">我們先從你還沒有的產品線開始看</span>，找到缺口，先補那個。</p>
+    </div>
+    <div class="script-block">
+      <span class="script-tag tag-bridge">長期方向</span>
+      <p>用了之後，如果你覺得數值有提升、感受有改變，那時候再來討論要不要做整體的整合。<br><br>沒有壓力——<span class="accent-word">我們一步一步來，最終目標是讓你整條防線都是穩的</span>。</p>
+    </div>
+
+    <div class="section-label">關鍵心態</div>
+    <div class="tips-grid">
+      <div class="tip-item"><strong>不對立</strong>從不否定對方現有選擇出發，降低防衛心。</div>
+      <div class="tip-item"><strong>找缺口</strong>問清楚對方用的是哪個類別，鎖定還沒被照顧到的那一塊。</div>
+      <div class="tip-item"><strong>數據說話</strong>先讓 Prysm 數值說話，讓對方自己判斷目前的狀態夠不夠。</div>
+      <div class="tip-item"><strong>節奏</strong>不急著走到全產品更換，讓對方有空間慢慢信任。</div>
+    </div>
+
+    <div class="practice-row">
+      <span class="practice-note">練習整個結尾說法 + Q&A 應對，確認說得自然有溫度</span>
+      <button class="btn-practice" onclick="markPracticed(12)">✓ 練習完成</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<script>
+  const TOTAL = 12;
+  const practiced = new Set();
+
+  function toggleCard(n) {
+    const card = document.getElementById('card-' + n);
+    card.classList.toggle('open');
+  }
+
+  function toggleAll(open) {
+    for (let i = 1; i <= TOTAL; i++) {
+      const card = document.getElementById('card-' + i);
+      if (open) card.classList.add('open');
+      else card.classList.remove('open');
+    }
+  }
+
+  function jumpTo(n) {
+    const card = document.getElementById('card-' + n);
+    card.classList.add('open');
+    const offset = 120; // topbar + progress + quicknav height
+    const top = card.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top, behavior: 'smooth' });
+  }
+
+  function markPracticed(n) {
+    practiced.add(n);
+    const card = document.getElementById('card-' + n);
+    card.classList.add('practiced');
+    const btn = card.querySelector('.btn-practice');
+    btn.textContent = '✓ 已完成';
+    // highlight nav button
+    const qbtn = document.querySelectorAll('.qbtn')[n - 1];
+    if (qbtn) qbtn.classList.add('done');
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const count = practiced.size;
+    const pct = Math.round((count / TOTAL) * 100);
+    document.getElementById('progressBar').style.width = pct + '%';
+    document.getElementById('progressCount').textContent = count + ' / ' + TOTAL;
+  }
+
+  // Open first card by default
+  document.getElementById('card-1').classList.add('open');
+</script>
+</body>
+</html>
